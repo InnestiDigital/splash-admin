@@ -135,10 +135,12 @@ function presetDescription(preset: { description?: string | Record<string, strin
 function seedLocalState(s: NonNullable<typeof section.value>) {
   localName.value = s.name
   localAnchor.value = s.anchor || ''
-  localColorScheme.value = s.colorScheme
+  // DB schema defaults (sections.color_scheme/container_mode are NOT NULL with
+  // defaults) don't reach in-memory fixtures — fall back to the same values.
+  localColorScheme.value = s.colorScheme || 'light'
   localSectionRole.value = s.sectionRole || ''
   localSectionType.value = (s as any).sectionType || 'stacked'
-  localContainerMode.value = s.containerMode
+  localContainerMode.value = s.containerMode || 'measure'
   localSectionSpaceY.value = (s as any).sectionSpaceY || 'md'
   localContainerInsetX.value = (s as any).containerInsetX || (s.containerMode === 'full-bleed' ? 'none' : 'md')
   localIsHidden.value = s.isHidden
