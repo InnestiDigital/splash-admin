@@ -1,0 +1,13 @@
+// Utility margin/padding classes: .mt-6 through .mt-50, etc.
+@mixin m-x-list {
+  @for $i from 6 through 50 {
+    .mv-#{$i} { margin-top: #{$i * 0.1}rem !important; }
+    .mh-#{$i} { margin-left: #{$i * 0.1}rem !important; }
+    .mt-#{$i} { margin-top: #{$i * 0.1}rem !important; }
+    .mb-#{$i} { margin-bottom: #{$i * 0.1}rem !important; }
+    .ms-#{$i} { margin-left: #{$i * 0.1}rem !important; }
+    .me-#{$i} { margin-right: #{$i * 0.1}rem !important; }
+    .pt-#{$i} { padding-top: #{$i * 0.1}rem !important; }
+    .pb-#{$i} { padding-bottom: #{$i * 0.1}rem !important; }
+  }
+}

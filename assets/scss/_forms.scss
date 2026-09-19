@@ -1,0 +1,102 @@
+@use 'variables' as *;
+
+// ==========================================================================
+// Form inputs
+// ==========================================================================
+
+.cms-form-group {
+  margin-bottom: var(--cms-sp-5, 24px);
+
+  label, .cms-label {
+    font-size: var(--cms-fs-sm, 13px);
+    font-weight: 600;
+    margin-bottom: var(--cms-sp-2, 8px);
+    color: $ink;
+    display: block;
+
+    .required-star {
+      color: $danger;
+      margin-left: 2px;
+    }
+  }
+
+  .cms-helper-text {
+    font-size: var(--cms-fs-caption, 12px);
+    line-height: 1.5;
+    color: $ink-muted;
+    margin-top: var(--cms-sp-1, 4px);
+  }
+
+  .cms-error-text {
+    font-size: var(--cms-fs-caption, 12px);
+    color: $danger;
+    margin-top: var(--cms-sp-1, 4px);
+  }
+}
+
+// The control class is a primitive in its own right. Keeping it nested under
+// `.cms-form-group` meant dozens of selects bearing this class had no height,
+// width or focus treatment unless a particular page happened to wrap them in
+// the right parent. Runtime tokens keep the same geometry in the 10px classic
+// shell and the 16px editor shell.
+.cms-form-control {
+  width: 100%;
+  height: var(--cms-density-md, 40px);
+  padding: 0 var(--cms-sp-3, 12px);
+  border: 1px solid $line-strong;
+  border-radius: var(--cms-radius-control, 6px);
+  color: $ink-body;
+  background: $surface;
+  font-family: inherit;
+  font-size: var(--cms-fs-body, 14px);
+  transition:
+    border-color $motion-fast $ease-out,
+    box-shadow $motion-fast $ease-out,
+    background-color $motion-fast $ease-out;
+
+  &:hover:not(:disabled) {
+    border-color: $line-hover;
+  }
+
+  &:focus {
+    border-color: $accent;
+    outline: none;
+    box-shadow: 0 0 0 3px $accent-ring;
+  }
+
+  &::placeholder {
+    color: $ink-subtle;
+  }
+
+  &:disabled, &.disabled {
+    background-color: $surface-sunken;
+    cursor: not-allowed;
+    color: $ink-subtle;
+  }
+
+  &.is-invalid {
+    background-color: $danger-soft;
+    border-color: $danger;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(158, 43, 37, 0.16);
+    }
+  }
+}
+
+textarea.cms-form-control {
+  height: auto;
+  min-height: 80px;
+  padding: var(--cms-sp-2, 8px) var(--cms-sp-3, 12px);
+  line-height: 1.55;
+}
+
+.cms-form-control--inline {
+  height: var(--cms-density-sm, 34px);
+  font-size: var(--cms-fs-sm, 13px);
+}
+
+.cms-form-control--sm {
+  height: var(--cms-density-sm, 34px);
+  font-size: var(--cms-fs-sm, 13px);
+}

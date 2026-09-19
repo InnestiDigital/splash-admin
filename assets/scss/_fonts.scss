@@ -1,0 +1,38 @@
+// ==========================================================================
+// Admin webfonts
+//
+// The admin declared `font-family: Inter` for months without ever shipping an
+// @font-face rule, so every surface silently rendered in system sans. Both
+// faces already lived in public/fonts/ — they are now actually loaded.
+//
+// PRIVATE FAMILY NAMES. These are deliberately NOT called "Inter" and
+// "Fraunces". The typography and theme-settings screens inject the tenant's own
+// @font-face rules into this same admin document, and a site is free to ship
+// its own Fraunces or Inter. Declaring those names here put three identical
+// declarations of each family in one document, where the last one wins — so
+// admin chrome could silently repaint a tenant's font specimen, or vice versa.
+// Namespacing removes that whole class of collision: admin chrome resolves
+// "Splash Admin UI" / "Splash Admin Display", tenant fonts keep their real
+// names, and the two can never shadow each other.
+//
+// format('woff2') — NOT format('woff2-variations'). The latter is a dead draft
+// syntax that Chrome silently discards, taking the whole @font-face rule with
+// it; a variable woff2 loads correctly under the plain format string, and the
+// `font-weight: 100 900` range is what actually unlocks the weight axis.
+// ==========================================================================
+
+@font-face {
+  font-family: 'Splash Admin UI';
+  src: url('/fonts/Inter-VF.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Splash Admin Display';
+  src: url('/fonts/Fraunces-VF.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}

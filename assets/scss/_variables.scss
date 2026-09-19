@@ -1,0 +1,292 @@
+// ==========================================================================
+// Splash Admin — design tokens
+//
+// Direction: "editorial studio". Warm paper canvas, Fraunces for display type,
+// Inter for UI, brand green demoted from "everything" to accent. Structure is
+// carried by the neutral ramp, never by the brand colour.
+//
+// TOKEN CONVENTIONS (read before adding):
+//
+//   1. SCALES come first ($paper-*, $ink-*, $fs-*, $sp-*, $elev-*). They are
+//      raw values with no meaning attached.
+//   2. SEMANTIC ROLES come second ($surface, $ink-body, $line, $accent…). These
+//      are what components must use. A component that reaches past a role to a
+//      raw scale value is a bug — the role is the theming seam.
+//   3. LEGACY ALIASES come last. They exist only so the ~40 pre-existing scoped
+//      component styles keep compiling. Do NOT use them in new code, and delete
+//      one whenever you touch its last consumer.
+//
+//   $primary — intentionally ABSENT. Bootstrap reserves $primary for the brand
+//      colour; introducing one here that isn't the brand green makes Bootstrap's
+//      SCSS mixins emit white-on-white buttons.
+// ==========================================================================
+
+// ==========================================================================
+// 1. SCALES
+// ==========================================================================
+
+// --- Warm neutral ramp (hue ~40°, low saturation — "paper", not "grey") ---
+$paper-50:  #fbfaf7; // app canvas
+$paper-100: #f6f3ed; // subtle surface, table headers, hover fills
+$paper-200: #ede9e0; // disabled fills
+$paper-300: #e2ddd2; // hairlines
+$paper-400: #d3ccbe; // strong borders, input borders
+$paper-500: #b4ac9c; // border hover
+
+$ink-400: #746d61; // placeholder, disabled text — still passes on paper surfaces
+$ink-500: #6e6659; // muted / secondary text
+$ink-700: #3e3a33; // body text
+$ink-900: #211e19; // titles
+
+$pure-white: #fff;
+
+// --- Brand green (accent only — never used to carry structure) ---
+$green-700: #1b5e20; // pressed
+$green-600: #256629; // hover
+$green-500: #2e7d32; // brand
+$green-100: #e8f1e7; // soft fill
+$green-050: #f1f7f0; // softest fill
+
+// --- Status hues, warmed to sit on paper ---
+$red-600:   #9e2b25;
+$red-100:   #fbf0ee;
+$amber-600: #945708; // status text — passes AA on $amber-100 and white
+$amber-100: #fbf1e3;
+
+// --- Type scale (1rem = 10px; html font-size is 62.5%) ---
+$fs-overline: 1.1rem;
+$fs-caption:  1.2rem;
+$fs-sm:       1.3rem;
+$fs-body:     1.4rem;
+$fs-lg:       1.6rem;
+$fs-h3:       1.8rem;
+$fs-h2:       2.2rem;
+$fs-h1:       3.2rem;
+$fs-display:  4.4rem;
+
+// --- Type families ---
+// Private names, declared in _fonts.scss — see the collision note there. Real
+// "Inter" / "Fraunces" stay reserved for tenant fonts injected into this same
+// document by the typography and theme-settings screens.
+$font-ui: 'Splash Admin UI', Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-display: 'Splash Admin Display', ui-serif, Georgia, 'Times New Roman', serif;
+$font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+// --- Spacing scale (4px base) ---
+$sp-1: 0.4rem;
+$sp-2: 0.8rem;
+$sp-3: 1.2rem;
+$sp-4: 1.6rem;
+$sp-5: 2.4rem;
+$sp-6: 3.2rem;
+$sp-7: 4.8rem;
+$sp-8: 6.4rem;
+
+// --- Density scale (control and row heights) ---
+$density-xs: 2.8rem;
+$density-sm: 3.4rem;
+$density-md: 4rem;
+$density-lg: 4.8rem;
+
+// --- Radius ---
+$radius-control: 0.6rem;
+$radius-card: 1rem;
+$radius-dialog: 1.4rem;
+$radius-pill: 999px;
+
+// --- Elevation (3 intentional levels; e0 is "flat on canvas") ---
+$elev-1: 0 1px 2px rgba(33, 30, 25, 0.05);
+$elev-2: 0 1px 2px rgba(33, 30, 25, 0.05), 0 8px 24px rgba(33, 30, 25, 0.07);
+$elev-3: 0 24px 60px rgba(33, 30, 25, 0.18);
+
+// --- Stacking ---
+//
+// One ladder for everything that leaves the document flow. Before this existed
+// each overlay and Teleport picked its own number, so "which one is on top" was
+// decided by whoever last guessed highest. Pick the rung, never a raw integer.
+$z-sticky:   200;  // sticky headers, breadcrumb bars
+$z-dropdown: 400;  // select menus, autocomplete
+$z-overlay:  800;  // full-surface scrims below dialogs
+$z-drawer:   900;  // persistent non-modal panels (e.g. the assistant drawer) — below modals
+$z-modal:    1000; // dialogs and their backdrop
+$z-popover:  1200; // popovers and tooltips raised above a dialog
+$z-toast:    1400; // alerts — always the topmost thing on screen
+
+// --- Motion ---
+$motion-fast: 120ms;
+$motion-normal: 180ms;
+$motion-slow: 260ms;
+$ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+$ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+// ==========================================================================
+// 2. SEMANTIC ROLES — what components must use
+// ==========================================================================
+
+// --- Surfaces ---
+$canvas: $paper-50;
+$surface: $pure-white;
+$surface-subtle: $paper-100;
+$surface-sunken: $paper-200;
+
+// --- Ink ---
+$ink: $ink-900;
+$ink-body: $ink-700;
+$ink-muted: $ink-500;
+$ink-subtle: $ink-400;
+$ink-inverse: $pure-white;
+
+// --- Lines ---
+$line: $paper-300;
+$line-strong: $paper-400;
+$line-hover: $paper-500;
+$border-width-hairline: 1px;
+
+// --- Accent (brand green) ---
+$accent: $green-500;
+$accent-hover: $green-600;
+$accent-pressed: $green-700;
+$accent-soft: $green-100;
+$accent-softest: $green-050;
+$accent-ring: rgba(46, 125, 50, 0.2);
+
+// --- Status ---
+$danger: $red-600;
+$danger-soft: $red-100;
+$warn: $amber-600;
+$warn-soft: $amber-100;
+$ok: $green-500;
+$ok-soft: $green-100;
+
+// --- Rail (the dark utility strip) ---
+$rail-bg: #19211b;
+$rail-hover-bg: #26302a;
+$rail-ink: rgba(255, 255, 255, 0.82);
+
+// ==========================================================================
+// 3. LEGACY ALIASES — do not use in new code
+//
+// Every name below predates the scale/role split above and is kept only so the
+// pre-existing scoped component styles compile. Delete an alias when you touch
+// its last consumer. Grep before adding anything here.
+// ==========================================================================
+
+$primary-color: $accent;
+$primary-hover: $accent-hover;
+$primary-pressed: $accent-pressed;
+$primary-soft: $accent-soft;
+$primary-soft-hover: $green-050;
+$secondary-color: $ink-muted;
+
+$text-color: $ink;
+$text-light-color: $ink-muted;
+$input-text-color: $ink-body;
+$input-text-light-color: $ink-subtle;
+
+$input-border-color: $line-strong;
+$tab-border-color: $line-strong;
+$borders-color: $line;
+$strong-border-color: $line-strong;
+$dashed-border: $line-hover;
+
+$input-light-bg: rgba(255, 255, 255, 0.9);
+$canvas-bg: $canvas;
+$names-thumbnail-bg: $surface-subtle;
+$table-border-color: $line;
+$dropdown-hover-bg: $surface-subtle;
+$tree-nav-bg: $surface;
+$tab-bg: $surface-subtle;
+$hover-list: $accent-soft;
+$shadow: rgba(33, 30, 25, 0.12);
+
+$sidebar-bg: $rail-bg;
+$sidebar-hover-bg: $rail-hover-bg;
+$sidebar-icons: $rail-ink;
+
+$shadow-sm: $elev-1;
+$shadow-md: $elev-2;
+
+$dashboard-version-color: $warn;
+$create-buttons-bg: $accent-soft;
+$create-buttons-border: $accent-hover;
+
+$hover-list-text: $accent;
+$nav-icon-color: $ink-muted;
+$nav-icon-active-color: $accent;
+$expand-icon: $ink-subtle;
+
+$breadcrumb-active-color: $ink;
+$breadcrumb-color: $ink-muted;
+
+$login-text-color: $pure-white;
+$edit-icon: $ink-muted;
+
+$multi-selected-remove-color: $ink-body;
+$select-arrow: $ink-muted;
+$user-thumbnail-border: $line-strong;
+$accordion-header-text-color: $ink-body;
+
+$required-sign: $danger;
+$required-symbol: $danger;
+$error-background: $danger-soft;
+$error-primary: $danger;
+$error-border: rgba(158, 43, 37, 0.35);
+
+$alert-text-color: $ink-body;
+$alert-success-background: $ok-soft;
+$alert-success-border: rgba(46, 125, 50, 0.35);
+$alert-success-icon: $green-600;
+$alert-warning-background: $warn-soft;
+$alert-warning-border: rgba(178, 106, 18, 0.35);
+$alert-warning-icon: $warn;
+$alert-danger-border: rgba(158, 43, 37, 0.35);
+$alert-danger-icon: $danger;
+
+$modal-border: $line-strong;
+
+$checkbox-background-color: $accent;
+$checkbox-checked-color: $accent;
+$checkbox-text-color: $pure-white;
+$checkbox-color: $ink-muted;
+$checkbox-check-color: $ink-body;
+$old-radio-checked-color: $accent;
+
+$spinner-color: $accent;
+
+$select-border-color: $line-strong;
+$select-placeholder-color: $ink-subtle;
+$select-disabled-placeholder-color: $ink-subtle;
+
+$custom-button-disabled-text-color: $ink-subtle;
+$custom-button-background-disabled-color: $surface-sunken;
+$custom-button-border-disabled-color: $line;
+
+$custom-button-primary-background-color: $accent;
+$custom-button-primary-background-hover-color: $accent-hover;
+$custom-button-primary-background-pressed-color: $accent-pressed;
+$custom-button-primary-text-color: $pure-white;
+
+$custom-button-secondary-background-color: $surface;
+$custom-button-secondary-background-hover-color: $accent-soft;
+$custom-button-secondary-background-pressed-color: $accent-soft;
+$custom-button-secondary-color: $accent;
+$custom-button-secondary-hover-color: $accent-hover;
+$custom-button-secondary-pressed-color: $accent-pressed;
+
+$custom-button-link-background-color: transparent;
+$custom-button-link-background-hover-color: $accent-soft;
+$custom-button-link-background-pressed-color: $accent-soft;
+$custom-button-link-color: $accent;
+$custom-button-link-hover-color: $accent-hover;
+$custom-button-link-pressed-color: $accent-pressed;
+
+$disabled-input-bg: $surface-sunken;
+$radio-disabled-bg: $surface-sunken;
+$multi-lang-input-dot: $danger;
+
+// Was #007fae — an Angular-era blue with no place in the palette.
+$display-more-button-color: $accent;
+
+$multi-language-border-color: $line-strong;
+$multi-language-text-color: $ink-body;
+$multi-language-inactive-tab-color: $ink-muted;

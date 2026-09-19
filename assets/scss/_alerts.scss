@@ -1,0 +1,90 @@
+@use 'variables' as *;
+
+// ==========================================================================
+// CMS Alerts — consistent semantic feedback
+// ==========================================================================
+
+.cms-alert {
+  text-align: left;
+  padding: 1.5rem 1.6rem;
+  margin-bottom: 2rem;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: $radius-card;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  color: $alert-text-color;
+
+  .cms-alert-icon {
+    font-size: 2.1rem;
+    flex-shrink: 0;
+    margin-top: -0.2rem;
+  }
+
+  .cms-alert-content {
+    flex: 1;
+
+    .cms-alert-title {
+      font-size: 1.4rem;
+      font-weight: 650;
+      margin-bottom: 0.3rem;
+    }
+
+    .cms-alert-description {
+      font-size: 1.3rem;
+      line-height: 1.5;
+    }
+  }
+
+  .cms-alert-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.6rem;
+    color: $text-light-color;
+    padding: 0;
+    line-height: 1;
+
+    &:hover {
+      color: $text-color;
+    }
+  }
+
+  // --- Variants ---
+  &--success {
+    background-color: $alert-success-background;
+    border-color: $alert-success-border;
+
+    .cms-alert-icon {
+      color: $alert-success-icon;
+    }
+  }
+
+  &--warning {
+    background-color: $alert-warning-background;
+    border-color: $alert-warning-border;
+
+    .cms-alert-icon {
+      color: $alert-warning-icon;
+    }
+  }
+
+  &--danger {
+    background-color: $error-background;
+    border-color: $alert-danger-border;
+
+    .cms-alert-icon {
+      color: $alert-danger-icon;
+    }
+  }
+
+  &--info {
+    background-color: #eef6fb;
+    border-color: #bdd9ea;
+
+    .cms-alert-icon {
+      color: #2f6f91;
+    }
+  }
+}

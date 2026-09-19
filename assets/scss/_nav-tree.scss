@@ -1,0 +1,115 @@
+@use 'variables' as *;
+
+// ==========================================================================
+// Navigation tree inside the context sidebar
+// ==========================================================================
+
+.cms-nav-tree {
+  list-style: none;
+  padding: $sp-2 $sp-2 $sp-4;
+  margin: 0;
+
+  li {
+    a,
+    .cms-nav-tree__group {
+      color: $ink-body;
+      cursor: pointer;
+      padding: 0 $sp-3;
+      display: flex;
+      align-items: center;
+      min-height: $density-sm;
+      position: relative;
+      text-decoration: none;
+      width: 100%;
+      font-size: $fs-sm;
+      font-weight: 550;
+      font-family: inherit;
+      text-align: left;
+      border: 0;
+      background: transparent;
+      border-radius: 0.7rem;
+      transition:
+        background-color $motion-fast $ease-out,
+        color $motion-fast $ease-out;
+
+      &:hover {
+        background-color: $surface-subtle;
+      }
+
+      .nav-icon {
+        font-size: 1.8rem;
+        margin-right: $sp-2;
+        color: $ink-muted;
+      }
+
+      .nav-label {
+        flex: 1;
+        color: inherit;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .chevron {
+        margin-left: auto;
+        margin-right: 0;
+        font-size: $fs-lg;
+        color: $ink-subtle;
+        // Was 250ms — over the 300ms UI ceiling once you account for the
+        // click-to-paint delay, on an affordance that gets clicked constantly.
+        transition: transform $motion-normal $ease-out;
+
+        &.expanded {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    // Active state (current route match)
+    &.active-link > a {
+      background-color: $accent-soft;
+      color: $accent-pressed;
+
+      .nav-icon {
+        color: $accent;
+      }
+
+      // A visible route marker is easier to scan than the former 6px dot.
+      &::before {
+        content: '';
+        position: absolute;
+        width: 3px;
+        height: 2rem;
+        background-color: $accent;
+        border-radius: $radius-pill;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    &.active-section > :is(a, .cms-nav-tree__group) {
+      color: $accent-pressed;
+
+      .nav-icon,
+      .nav-label {
+        color: $accent-pressed;
+      }
+    }
+
+    // Nested levels
+    > ul {
+      list-style: none;
+      padding: 0;
+
+      li > :is(a, .cms-nav-tree__group) {
+        padding-left: 3.9rem;
+        font-weight: 500;
+      }
+
+      ul li > :is(a, .cms-nav-tree__group) {
+        padding-left: 5.4rem;
+      }
+    }
+  }
+}

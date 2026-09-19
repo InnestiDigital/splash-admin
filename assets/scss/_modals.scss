@@ -1,0 +1,57 @@
+@use 'variables' as *;
+
+// ==========================================================================
+// CMS Modals — confirmation dialog styles
+// ==========================================================================
+
+.cms-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 27, 21, 0.52);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.cms-modal {
+  background: $pure-white;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: $radius-dialog;
+  width: 100%;
+  max-width: 48rem;
+  max-height: min(90vh, 72rem);
+  overflow: auto;
+  box-shadow: $shadow-md;
+}
+
+.cms-modal-header {
+  padding: 2rem 2.2rem 1.6rem;
+  border-bottom: 1px solid $borders-color;
+
+  h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $text-color;
+  }
+}
+
+.cms-modal-body {
+  padding: 2rem 2.2rem;
+  font-size: 1.4rem;
+  color: $text-color;
+
+  p {
+    margin: 0;
+  }
+}
+
+.cms-modal-footer {
+  padding: 1.6rem 2.2rem 2rem;
+  border-top: 1px solid $borders-color;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+}

@@ -1,0 +1,224 @@
+@use 'sass:color';
+@use 'variables' as *;
+
+// ==========================================================================
+// CMS Buttons
+//
+// Weight follows consequence: primary is the one action a page wants, secondary
+// and outline are the rest, ghost is for anything that repeats per row. Filled
+// danger is reserved for the confirm button inside a destructive dialog — never
+// for a row action, where it repeats down the page and shouts at the user for
+// doing nothing wrong.
+// ==========================================================================
+
+.cms-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--cms-density-md, 40px);
+  padding: 0 var(--cms-sp-5, 24px);
+  font-family: inherit;
+  font-size: var(--cms-fs-body, 14px);
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: var(--cms-radius-control, 6px);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color $motion-fast $ease-out,
+    border-color $motion-fast $ease-out,
+    color $motion-fast $ease-out,
+    box-shadow $motion-fast $ease-out,
+    transform $motion-fast $ease-out;
+  white-space: nowrap;
+  gap: var(--cms-sp-2, 8px);
+
+  &:disabled, &.disabled {
+    color: $ink-subtle;
+    background-color: $surface-sunken;
+    border-color: $line;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.75;
+  }
+
+  // Press feedback. Without it the interface never confirms it heard the click.
+  &:active:not(:disabled):not(.disabled) {
+    transform: scale(0.97);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  // --- Full-width (replaces Bootstrap's w-100 on pre-auth pages, which load
+  // admin.scss without Bootstrap) ---
+  &--block {
+    width: 100%;
+  }
+
+  // --- Primary (accent filled) ---
+  &--primary {
+    background-color: $accent;
+    color: $ink-inverse;
+    box-shadow: $elev-1;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: $accent-hover;
+      }
+    }
+    &:active {
+      background-color: $accent-pressed;
+    }
+  }
+
+  // --- Secondary (neutral outline) ---
+  &--secondary {
+    background-color: $surface;
+    color: $ink-body;
+    border-color: $line-strong;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: $surface-subtle;
+        border-color: $line-hover;
+      }
+    }
+    &:active {
+      background-color: $surface-sunken;
+    }
+  }
+
+  // --- Link style ---
+  &--link {
+    background-color: transparent;
+    color: $accent;
+    border: none;
+    padding: 0 var(--cms-sp-2, 8px);
+    min-height: auto;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: $accent-soft;
+        color: $accent-hover;
+      }
+    }
+    &:active {
+      color: $accent-pressed;
+    }
+  }
+
+  // --- Ghost / outline aliases already used by shipped pages ---
+  &--ghost {
+    min-height: var(--cms-density-sm, 34px);
+    padding: 0 var(--cms-sp-3, 12px);
+    color: $ink-muted;
+    background: transparent;
+    border-color: transparent;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: $ink;
+        background: $surface-subtle;
+      }
+    }
+  }
+
+  &--outline {
+    color: $ink-body;
+    background: $surface;
+    border-color: $line-strong;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: $accent;
+        background: $accent-soft;
+        border-color: rgba(46, 125, 50, 0.35);
+      }
+    }
+  }
+
+  // --- Danger: filled. Dialog confirmations only. ---
+  &--danger {
+    background-color: $danger;
+    color: $ink-inverse;
+    border-color: $danger;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: color.adjust($danger, $lightness: -6%);
+      }
+    }
+    &:active {
+      background-color: color.adjust($danger, $lightness: -12%);
+    }
+  }
+
+  // --- Danger: quiet. The correct default for row-level destructive actions. ---
+  &--danger-quiet {
+    color: $danger;
+    background: transparent;
+    border-color: transparent;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: $danger;
+        background: $danger-soft;
+        border-color: rgba(158, 43, 37, 0.25);
+      }
+    }
+  }
+
+  // --- Sizes ---
+  &--sm {
+    min-height: var(--cms-density-sm, 34px);
+    padding: 0 var(--cms-sp-3, 12px);
+    font-size: var(--cms-fs-sm, 13px);
+  }
+
+  &--xs {
+    min-height: var(--cms-density-xs, 28px);
+    padding: 0 var(--cms-sp-2, 8px);
+    font-size: var(--cms-fs-caption, 12px);
+    border-radius: 5px;
+  }
+
+  &--lg {
+    min-height: var(--cms-density-lg, 48px);
+    padding: 0 var(--cms-sp-6, 32px);
+    font-size: var(--cms-fs-lg, 16px);
+  }
+
+  // --- Loading spinner slot ---
+  .cms-btn-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: cms-spin 0.5s linear infinite;
+  }
+}
+
+// Touch devices fire :hover on tap and then keep it until the next tap, which
+// leaves buttons stuck in their hover fill. Gate the hover-only fills.
+@media (hover: none) {
+  .cms-btn:hover {
+    background-color: inherit;
+  }
+
+  .cms-btn--primary:hover {
+    background-color: $accent;
+  }
+
+  .cms-btn--danger:hover {
+    background-color: $danger;
+  }
+}
+
+@keyframes cms-spin {
+  to { transform: rotate(360deg); }
+}

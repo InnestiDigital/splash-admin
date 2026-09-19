@@ -1,0 +1,594 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+@use 'fonts';
+@use 'layout';
+@use 'nav-tree';
+@use 'forms';
+@use 'tables';
+@use 'buttons';
+@use 'alerts';
+@use 'modals';
+
+// ==========================================================================
+// Splash Admin — global styles (scoped to admin pages)
+// ==========================================================================
+
+// --- Design tokens ---
+//
+// Emitted on :root, NOT on html.cms-admin, so that every admin surface can read
+// them — including the editor, which deliberately opts out of the .cms-admin
+// rem base (its scoped styles are authored against a 16px root) but still needs
+// the palette. Names mirror the semantic roles in _variables.scss: add a role
+// there and you must add it here, or scoped styles drift from the Sass layer.
+:root {
+
+  // Surfaces
+  --cms-canvas: #{$canvas};
+  --cms-surface: #{$surface};
+  --cms-surface-subtle: #{$surface-subtle};
+  --cms-surface-sunken: #{$surface-sunken};
+
+  // Ink
+  --cms-ink: #{$ink};
+  --cms-ink-body: #{$ink-body};
+  --cms-ink-muted: #{$ink-muted};
+  --cms-ink-subtle: #{$ink-subtle};
+  --cms-ink-inverse: #{$ink-inverse};
+
+  // Lines
+  --cms-line: #{$line};
+  --cms-line-strong: #{$line-strong};
+  --cms-line-hover: #{$line-hover};
+
+  // Accent
+  --cms-accent: #{$accent};
+  --cms-accent-hover: #{$accent-hover};
+  --cms-accent-pressed: #{$accent-pressed};
+  --cms-accent-soft: #{$accent-soft};
+  --cms-accent-softest: #{$accent-softest};
+  --cms-accent-ring: #{$accent-ring};
+
+  // Status
+  --cms-danger: #{$danger};
+  --cms-danger-soft: #{$danger-soft};
+  --cms-warn: #{$warn};
+  --cms-warn-soft: #{$warn-soft};
+  --cms-ok: #{$ok};
+  --cms-ok-soft: #{$ok-soft};
+
+  // Rail
+  --cms-rail: #{$rail-bg};
+
+  // Type
+  //
+  // Runtime tokens are deliberately emitted in px. The classic admin uses a
+  // 10px rem root while the full-screen editor keeps the browser's 16px root;
+  // rem-valued custom properties therefore changed size depending on which
+  // shell consumed them. Sass-authored classic-admin rules still use the rem
+  // scale above, while shared/scoped Vue components get one portable size.
+  --cms-font-ui: #{$font-ui};
+  --cms-font-display: #{$font-display};
+  --cms-fs-overline: 11px;
+  --cms-fs-caption: 12px;
+  --cms-fs-sm: 13px;
+  --cms-fs-body: 14px;
+  --cms-fs-lg: 16px;
+  --cms-fs-h3: 18px;
+  --cms-fs-h2: 22px;
+  --cms-fs-h1: 32px;
+  --cms-fs-display: 44px;
+
+  // Spacing
+  --cms-sp-1: 4px;
+  --cms-sp-2: 8px;
+  --cms-sp-3: 12px;
+  --cms-sp-4: 16px;
+  --cms-sp-5: 24px;
+  --cms-sp-6: 32px;
+  --cms-sp-7: 48px;
+  --cms-sp-8: 64px;
+
+  // Control density
+  --cms-density-xs: 28px;
+  --cms-density-sm: 34px;
+  --cms-density-md: 40px;
+  --cms-density-lg: 48px;
+
+  // Shape and depth
+  --cms-radius-control: 6px;
+  --cms-radius-card: 10px;
+  --cms-radius-dialog: 14px;
+  --cms-radius-pill: #{$radius-pill};
+  --cms-elev-1: #{$elev-1};
+  --cms-elev-2: #{$elev-2};
+  --cms-elev-3: #{$elev-3};
+
+  // Stacking
+  --cms-z-sticky: #{$z-sticky};
+  --cms-z-dropdown: #{$z-dropdown};
+  --cms-z-overlay: #{$z-overlay};
+  --cms-z-drawer: #{$z-drawer};
+  --cms-z-modal: #{$z-modal};
+  --cms-z-popover: #{$z-popover};
+  --cms-z-toast: #{$z-toast};
+
+  // Motion
+  --cms-motion-fast: #{$motion-fast};
+  --cms-motion-normal: #{$motion-normal};
+  --cms-motion-slow: #{$motion-slow};
+  --cms-ease-out: #{$ease-out};
+  --cms-ease-in-out: #{$ease-in-out};
+
+  // --- Legacy runtime aliases (pre-existing scoped styles read these) ---
+  --cms-muted: #{$ink-muted};
+  --cms-border: #{$line};
+  --cms-border-strong: #{$line-strong};
+  --cms-border-width-hairline: #{$border-width-hairline};
+  --cms-brand: #{$accent};
+  --cms-brand-hover: #{$accent-hover};
+  --cms-brand-soft: #{$accent-soft};
+  --cms-shadow-sm: #{$elev-1};
+  --cms-shadow-md: #{$elev-2};
+}
+
+// --- Base reset (scoped to the classic admin shell) ---
+//
+// The 62.5% rem base lives here and nowhere else. Any surface that adopts this
+// class inherits a 10px root, so a surface whose styles assume 16px must not
+// take it — see the editor.
+html.cms-admin {
+  height: 100%;
+  font-size: 62.5%; // 10px base for rem
+  color: $ink;
+  background: $canvas;
+  color-scheme: light;
+}
+
+html.cms-admin body {
+  font-family: $font-ui;
+  font-size: $fs-body;
+  line-height: 1.55;
+  height: 100%;
+  margin: 0;
+  color: $ink-body;
+  background: $canvas;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+// The editor opts out of the rem base above but still wants the type and canvas.
+html.cms-editor {
+  color-scheme: light;
+}
+
+html.cms-editor body {
+  min-height: 100%;
+  margin: 0;
+  font-family: $font-ui;
+  font-size: var(--cms-fs-body, 14px);
+  line-height: 1.5;
+  color: $ink-body;
+  background: $canvas;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+// Unlike the classic shell, the editor does not load Bootstrap's reset. Native
+// controls otherwise fall back to the browser UI font even though their parent
+// panels use Splash Admin UI.
+html.cms-editor button,
+html.cms-editor input,
+html.cms-editor select,
+html.cms-editor textarea {
+  font: inherit;
+}
+
+html.cms-editor *,
+html.cms-editor *::before,
+html.cms-editor *::after {
+  box-sizing: border-box;
+}
+
+.cms-wrapper a {
+  text-decoration: none;
+}
+
+.cms-wrapper label, .cms-wrapper .label {
+  font-size: var(--cms-fs-sm, 13px);
+  margin-bottom: var(--cms-sp-2, 8px);
+}
+
+// --- Bootstrap overrides (scoped) ---
+@media (min-width: 1400px) {
+  .cms-wrapper .container-xl,
+  .cms-wrapper .container-lg,
+  .cms-wrapper .container-md,
+  .cms-wrapper .container-sm,
+  .cms-wrapper .container {
+    max-width: 1140px;
+  }
+}
+
+.cms-wrapper .container,
+.cms-wrapper .container-fluid,
+.cms-wrapper .container-xxl,
+.cms-wrapper .container-xl,
+.cms-wrapper .container-lg,
+.cms-wrapper .container-md,
+.cms-wrapper .container-sm,
+.cms-wrapper .row,
+.cms-wrapper .row > * {
+  --bs-gutter-x: #{$sp-6};
+}
+
+.cms-wrapper hr {
+  border-top: 1px solid $line;
+  opacity: 1;
+  margin-top: $sp-5;
+  margin-bottom: $sp-5;
+}
+
+// --- Focus handling (scoped) ---
+.cms-wrapper :focus-visible {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+  border-radius: var(--cms-radius-control, 6px);
+}
+
+// --- Typography (scoped) ---
+//
+// Page titles use Fraunces at a low optical-size axis value; everything below
+// h1 stays in Inter. Display type is the accent here — using it below h1 turns
+// the whole admin into a magazine and destroys the information hierarchy.
+.cms-wrapper h1, .cms-wrapper .h1 {
+  font-family: $font-ui;
+  font-optical-sizing: auto;
+  font-size: 2.8rem;
+  line-height: 1.2;
+  font-weight: 680;
+  letter-spacing: -0.025em;
+  color: $ink;
+}
+
+@media (forced-colors: active) {
+  .cms-wrapper :focus-visible {
+    outline: 2px solid CanvasText;
+  }
+}
+
+.cms-wrapper h2, .cms-wrapper .h2, .cms-wrapper legend, .cms-wrapper .legend {
+  font-size: $fs-h2;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: $ink;
+  margin-bottom: $sp-4;
+  margin-top: $sp-6;
+}
+
+.cms-wrapper h3, .cms-wrapper .h3 {
+  font-size: $fs-h3;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  color: $ink;
+}
+
+.cms-wrapper h4 {
+  font-size: $fs-lg;
+  line-height: 1.4;
+  font-weight: 600;
+  color: $ink;
+}
+
+.cms-wrapper p {
+  color: $ink-body;
+}
+
+// Section label above a group of controls — the small caps voice.
+.cms-overline {
+  display: block;
+  font-size: $fs-overline;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $ink-muted;
+}
+
+.cms-wrapper code {
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+  font-family: $font-mono;
+  color: $ink-body;
+  background: $surface-subtle;
+  border: 1px solid $line;
+  font-size: 0.9em;
+}
+
+// --- Shared card primitive ---
+//
+// Three elevation levels, used deliberately: flat sits on the canvas, the
+// default reads as a surface, raised is for the one thing that matters on a
+// page. Everything at the same depth is the same as nothing having depth.
+.cms-card {
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  background: $surface;
+  box-shadow: $elev-1;
+  overflow: hidden;
+
+  &--flat {
+    box-shadow: none;
+    background: transparent;
+  }
+
+  &--raised {
+    box-shadow: $elev-2;
+    border-color: transparent;
+  }
+}
+
+.cms-card__header,
+.cms-card__footer {
+  padding: $sp-4 $sp-5;
+}
+
+.cms-card__header {
+  border-bottom: 1px solid $line;
+}
+
+.cms-card__footer {
+  border-top: 1px solid $line;
+  background: $surface-subtle;
+}
+
+.cms-card__title {
+  margin: 0;
+  color: $ink;
+  font-size: $fs-lg;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+}
+
+.cms-card__body {
+  padding: $sp-5;
+}
+
+// --- Empty state ---
+//
+// Was a single grey sentence centred in a void on Media, Publish and the
+// version library — the first thing a new user ever sees on those surfaces.
+.cms-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $sp-3;
+  padding: $sp-8 $sp-5;
+  text-align: center;
+  border: 1px dashed $line-strong;
+  border-radius: $radius-card;
+  background: $surface-subtle;
+
+  &__icon {
+    font-size: 3.2rem;
+    color: $ink-subtle;
+  }
+
+  &__title {
+    font-size: $fs-lg;
+    font-weight: 600;
+    color: $ink;
+    margin: 0;
+  }
+
+  &__body {
+    font-size: $fs-sm;
+    color: $ink-muted;
+    margin: 0;
+    max-width: 42ch;
+  }
+}
+
+// --- Bootstrap bridges ---
+.cms-wrapper .btn {
+  border-radius: $radius-control;
+  font-size: $fs-body;
+  font-weight: 600;
+}
+
+.cms-wrapper .btn-primary {
+  --bs-btn-bg: #{$accent};
+  --bs-btn-border-color: #{$accent};
+  --bs-btn-hover-bg: #{$accent-hover};
+  --bs-btn-hover-border-color: #{$accent-hover};
+  --bs-btn-active-bg: #{$accent-pressed};
+  --bs-btn-active-border-color: #{$accent-pressed};
+}
+
+.cms-wrapper .form-control,
+.cms-wrapper .form-select {
+  border-color: $line-strong;
+  border-radius: var(--cms-radius-control, 6px);
+  color: $ink-body;
+  font-size: var(--cms-fs-body, 14px);
+
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px $accent-ring;
+  }
+}
+
+// --- Native selects ---
+//
+// Unstyled OS dropdowns were the single loudest "unfinished" tell in the admin:
+// they appeared in the workspace/site switcher, every page-status cell and the
+// editor page picker. One global rule replaces the OS widget everywhere rather
+// than shipping a JS select component nobody asked for.
+.cms-wrapper select,
+.cms-admin-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: var(--cms-sp-2, 8px) 36px var(--cms-sp-2, 8px) var(--cms-sp-3, 12px);
+  font-family: inherit;
+  font-size: var(--cms-fs-body, 14px);
+  color: $ink-body;
+  background-color: $surface;
+  // Chevron is inlined rather than an asset request: it is 200 bytes and it
+  // must recolour with the control, which an <img> cannot do.
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%236e6659' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  border: 1px solid $line-strong;
+  border-radius: var(--cms-radius-control, 6px);
+  cursor: pointer;
+  transition:
+    border-color $motion-fast $ease-out,
+    box-shadow $motion-fast $ease-out;
+
+  &:hover:not(:disabled) {
+    border-color: $line-hover;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: $accent;
+    box-shadow: 0 0 0 3px $accent-ring;
+  }
+
+  &:disabled {
+    background-color: $surface-sunken;
+    color: $ink-subtle;
+    cursor: not-allowed;
+  }
+
+}
+
+// Components legitimately set their own select padding and height, and a scoped
+// `.cms-form-control--sm[data-v-…]` outranks the rule above — which left the
+// chevron sitting on top of the label in every table row. This reclaims only
+// the space the chevron needs, at specificity that survives scoping.
+.cms-wrapper select[class] {
+  padding-right: 36px;
+}
+
+// Height-bearing controls get their vertical rhythm from the density token,
+// not from padding. This also protects 34px table selects from the generic
+// native-select padding above clipping their line box.
+.cms-wrapper select.cms-form-control {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+// --- Skip navigation (a11y) ---
+.skip-navigation {
+  &:focus {
+    margin: 0 auto;
+    width: 15rem;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    color: $accent;
+    text-align: center;
+  }
+}
+
+// --- Utility classes ---
+@include m-x-list;
+
+// --- Spinner ---
+.cms-spinner {
+  display: inline-block;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 3px solid $line;
+  border-top-color: $accent;
+  border-radius: 50%;
+  // Fast spin reads as a faster app at identical load times.
+  animation: cms-spin 0.5s linear infinite;
+
+  &--sm {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-width: 2px;
+  }
+
+  &--lg {
+    width: 4rem;
+    height: 4rem;
+    border-width: 4px;
+  }
+}
+
+@keyframes cms-spin {
+  to { transform: rotate(360deg); }
+}
+
+// --- Badge ---
+.cms-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $sp-1;
+  padding: 0.3rem 0.8rem;
+  font-size: $fs-caption;
+  font-weight: 600;
+  line-height: 1.4;
+  border-radius: $radius-pill;
+  white-space: nowrap;
+
+  &--success {
+    background-color: $ok-soft;
+    color: $accent-pressed;
+  }
+
+  &--warning {
+    background-color: $warn-soft;
+    color: $warn;
+  }
+
+  &--danger {
+    background-color: $danger-soft;
+    color: $danger;
+  }
+
+  // Was #e3f2fd / #1565c0 — the last Material blue in the palette.
+  &--info,
+  &--neutral,
+  &--muted {
+    background-color: $surface-subtle;
+    color: $ink-muted;
+    border: 1px solid $line;
+  }
+}
+
+// --- Reduced motion ---
+//
+// Reduced motion means gentler, not none: opacity and colour still carry
+// meaning, movement does not.
+@media (prefers-reduced-motion: reduce) {
+  html.cms-admin *,
+  html.cms-admin *::before,
+  html.cms-admin *::after,
+  html.cms-editor *,
+  html.cms-editor *::before,
+  html.cms-editor *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  // The spinner is the exception: it communicates "still working", so it keeps
+  // turning — just slower.
+  html.cms-admin .cms-spinner,
+  html.cms-admin .cms-btn-spinner,
+  html.cms-admin .ui-async__spinner,
+  html.cms-editor .cms-spinner,
+  html.cms-editor .cms-btn-spinner,
+  html.cms-editor .ui-async__spinner {
+    animation-duration: 1.2s !important;
+    animation-iteration-count: infinite !important;
+  }
+}

@@ -1,0 +1,195 @@
+@use 'variables' as *;
+
+// ==========================================================================
+// CMS Table — sortable, paginated, pinnable columns
+//
+// Density comes from the scale, not from taste: rows sit at $density-lg so a
+// screenful shows work rather than air. Row separators are the only structure —
+// the header is a label strip, not a bar.
+// ==========================================================================
+
+.cms-table-wrapper {
+  margin-top: $sp-5;
+  overflow: visible;
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  background: $surface;
+  box-shadow: $elev-1;
+}
+
+.cms-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $fs-body;
+  color: $ink-body;
+  font-variant-numeric: tabular-nums;
+
+  thead {
+    background: $surface;
+
+    th {
+      font-weight: 600;
+      padding: $sp-3 $sp-4;
+      border-bottom: 1px solid $line;
+      white-space: nowrap;
+      user-select: none;
+      color: $ink-muted;
+      font-size: $fs-overline;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+
+      &.sortable {
+        cursor: pointer;
+        transition: color $motion-fast $ease-out;
+
+        &:hover {
+          color: $ink;
+        }
+
+        .sort-icon {
+          margin-left: $sp-1;
+          font-size: 1rem;
+          color: $ink-subtle;
+
+          &.active {
+            color: $accent;
+          }
+        }
+      }
+
+      &.pinned {
+        position: sticky;
+        left: 0;
+        background-color: $surface;
+        z-index: 1;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $line;
+      transition: background-color $motion-fast $ease-out;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &:hover {
+        background-color: $surface-subtle;
+      }
+
+      td {
+        height: $density-lg;
+        padding: $sp-2 $sp-4;
+        vertical-align: middle;
+
+        &.pinned {
+          position: sticky;
+          left: 0;
+          background-color: inherit;
+          z-index: 1;
+        }
+      }
+    }
+  }
+
+  // ponytail: row actions stay always-visible. Hover-reveal would cut the
+  // visual noise further but costs discoverability and breaks on touch —
+  // demoting the buttons to --danger-quiet already solved the shouting.
+  .cms-table__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $sp-1;
+  }
+}
+
+// --- Mobile: scroll wide tables instead of crushing columns ---
+// At 390px the fixed columns squeezed together and the `white-space: nowrap`
+// headers were clipped by the viewport (e.g. "Author" → "Autho", "Status" →
+// "Statu"). Let the wrapper scroll horizontally and hold the table to a
+// readable min-width; the pinned first column (position: sticky) stays visible
+// while the rest scrolls under it.
+@media (max-width: 767px) {
+  .cms-table-wrapper {
+    position: relative;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+
+    &::before {
+      content: 'Swipe to view more';
+      position: sticky;
+      left: 0;
+      display: block;
+      width: max-content;
+      padding: $sp-2 $sp-3 0;
+      color: $ink-muted;
+      font-size: $fs-caption;
+    }
+  }
+
+  .cms-table {
+    min-width: 60rem; // 600px — columns keep their labels; user swipes across
+
+    thead th,
+    tbody td {
+      padding: $sp-2 $sp-3;
+    }
+
+    th:last-child,
+    td:last-child {
+      position: sticky;
+      right: 0;
+      background: $surface;
+      box-shadow: -8px 0 12px rgba(33, 30, 25, 0.04);
+    }
+  }
+
+}
+
+// Pagination bar
+.cms-table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: $sp-3 0;
+  font-size: $fs-sm;
+  color: $ink-muted;
+  gap: $sp-2;
+
+  .page-info {
+    margin-right: $sp-2;
+  }
+
+  .page-btn {
+    min-height: $density-sm;
+    background: $surface;
+    border: 1px solid $line-strong;
+    border-radius: $radius-control;
+    padding: 0 $sp-3;
+    cursor: pointer;
+    color: $ink-body;
+    font-size: $fs-sm;
+    transition:
+      border-color $motion-fast $ease-out,
+      background-color $motion-fast $ease-out,
+      color $motion-fast $ease-out,
+      transform $motion-fast $ease-out;
+
+    &:hover:not(:disabled) {
+      border-color: $line-hover;
+      background: $surface-subtle;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
