@@ -1,0 +1,45 @@
+# SonarCloud — analyze this repo as its own project.
+#
+# Prerequisites (one-time):
+# 1. SonarCloud → project InnestiDigital_splash-admin → Administration →
+#    Analysis Method → "CI-based analysis" (automatic analysis MUST be off,
+#    or SonarCloud rejects scanner runs).
+# 2. Repo secret SONAR_TOKEN (sonarcloud.io → Account → Security).
+# 3. Administration → linked GitHub repo, for PR decoration.
+#
+# Coverage: this repo's unit tests live in splash-cms (tests/admin/**) —
+# until coverage is wired from there, this project reports without it.
+#
+# Exclusions (see splash-cms docs/reviews/loc-reduction-plan.md):
+# - admin/pages/** — thin route shells, no logic (mirrors the main repo's
+#   coverage exclusions)
+# - admin/lib/** — the vendored AgentCore protocol, checksummed, not authored
+#   in this repo; gradable code lives everywhere else
+
+name: sonar
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: SonarSource/sonarqube-scan-action@v4
+        with:
+          args: >
+            -Dsonar.organization=innestidigital
+            -Dsonar.projectKey=InnestiDigital_splash-admin
+            -Dsonar.projectName=splash-admin
+            -Dsonar.sources=admin
+            -Dsonar.sourceEncoding=UTF-8
+            -Dsonar.exclusions=admin/pages/**,admin/lib/**,**/*.test.ts,**/*.spec.ts,**/*.json,**/*.scss,**/*.md
+            -Dsonar.coverage.exclusions=admin/pages/**,admin/lib/**
+            -Dsonar.cpd.exclusions=admin/lib/**,**/*.json
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
